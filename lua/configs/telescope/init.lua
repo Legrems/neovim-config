@@ -343,7 +343,9 @@ local options = {
           ["<C-k>"] = lga_actions.quote_prompt(),
         },
       },
-      advanced_git_search = {},
+    },
+    advanced_git_search = {
+      diff_plugin = "diffview",
     },
   },
 }
