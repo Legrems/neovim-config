@@ -220,14 +220,7 @@ end, { desc = "Goto prev buffer" })
 -- end, { desc = "Close buffer" })
 
 -- Comment
-local comment = require "Comment.api"
-map("n", "<leader>ci", function()
-  comment.toggle.linewise.current()
-end, { desc = "Toggle comment" })
-
-map("v", "<leader>ci", function()
-  comment.toggle.linewise(vim.fin.visualmode())
-end, { desc = "Toggle comment" })
+-- https://github.com/numToStr/Comment.nvim?tab=readme-ov-file#basic-mappings
 
 -- LSP
 map("n", "gD", vim.lsp.buf.declaration, { desc = "LSP declaration" })
@@ -425,23 +418,21 @@ end, { desc = "Which-key query lookup" })
 local gitsigns = require "gitsigns"
 map("n", "]c", function()
   if vim.wo.diff then
-    return "]c"
+    -- Use default vim ]c when in diff mode
+    vim.cmd.normal { "]c", bang = true }
+  else
+    gitsigns.nav_hunk "next"
   end
-  vim.schedule(function()
-    gitsigns.next_hunk()
-  end)
-  return "<Ignore>"
-end, { desc = "Jump to next hunk" })
+end, { desc = "Git: Jump to next hunk" })
 
 map("n", "[c", function()
   if vim.wo.diff then
-    return "[c"
+    -- Use default vim ]c when in diff mode
+    vim.cmd.normal { "[c", bang = true }
+  else
+    gitsigns.nav_hunk "prev"
   end
-  vim.schedule(function()
-    gitsigns.prev_hunk()
-  end)
-  return "<Ignore>"
-end, { desc = "Jump to prev hunk" })
+end, { desc = "Git: Jump to prev hunk" })
 
 map("n", "<leader>rh", gitsigns.reset_hunk, { desc = "Git Reset hunk" })
 map("n", "<leader>ph", gitsigns.preview_hunk, { desc = "Git Preview hunk" })

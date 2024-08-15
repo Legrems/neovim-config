@@ -19,12 +19,20 @@ return {
   { "emaniacs/vim-rest-console", lazy = false },
   { "mfussenegger/nvim-dap", lazy = false },
   {
+    "mfussenegger/nvim-lint",
+    lazy = false,
+    init = function()
+      -- require("link").linters_by_ft = {
+      --   python = { "mypy" },
+      -- }
+    end,
+  },
+  {
     "rcarriga/nvim-dap-ui",
     dependencies = {
       "mfussenegger/nvim-dap",
       "nvim-neotest/nvim-nio",
     },
-    lazy = false,
   },
   {
     "mfussenegger/nvim-dap-python",
@@ -32,7 +40,6 @@ return {
       "mfussenegger/nvim-dap",
       "rcarriga/nvim-dap-ui",
     },
-    lazy = false,
     init = function()
       require("dap-python").setup "python"
       -- Setup nvim-dap-ui also
@@ -49,15 +56,14 @@ return {
   },
   {
     "Weissle/persistent-breakpoints.nvim",
-    lazy = false,
     config = function(_, _)
       require("persistent-breakpoints").setup {
         load_breakpoints_event = { "BufReadPost" },
       }
     end,
   },
-  { "nvim-telescope/telescope-live-grep-args.nvim", lazy = false },
-  { "nvim-telescope/telescope-dap.nvim", lazy = false },
+  { "nvim-telescope/telescope-live-grep-args.nvim" },
+  { "nvim-telescope/telescope-dap.nvim" },
   -- {
   --   "harrisoncramer/gitlab.nvim",
   --   dependencies = {
@@ -68,7 +74,6 @@ return {
   --     "nvim-tree/nvim-web-devicons", -- Recommended but not required. Icons in discussion tree.
   --   },
   --   enabled = true,
-  --   lazy = false,
   --   build = function()
   --     require("gitlab.server").build(true)
   --   end, -- Builds the Go binary
@@ -81,7 +86,6 @@ return {
   -- },
   {
     "sindrets/diffview.nvim",
-    lazy = false,
     opts = function()
       return require "configs.diffview"
     end,
@@ -114,7 +118,6 @@ return {
 
   {
     "chentoast/marks.nvim",
-    lazy = false,
     init = function()
       require("marks").setup {
         default_mappings = true,
@@ -159,7 +162,6 @@ return {
   {
     "nvim-tree/nvim-web-devicons",
     config = function(_, opts)
-      dofile(vim.g.base46_cache .. "devicons")
       require("nvim-web-devicons").setup(opts)
     end,
   },
@@ -182,14 +184,12 @@ return {
       return require "configs.treesitter"
     end,
     config = function(_, opts)
-      dofile(vim.g.base46_cache .. "syntax")
       require("nvim-treesitter.configs").setup(opts)
     end,
   },
 
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
-    lazy = false,
     config = function()
       require("nvim-treesitter.configs").setup(require "configs.treesitter_textobjects")
     end,
@@ -202,10 +202,6 @@ return {
     opts = function()
       return require "configs.gitsigns"
     end,
-    -- config = function(_, opts)
-    --   dofile(vim.g.base46_cache .. "git")
-    --   require("gitsigns").setup(opts)
-    -- end,
   },
 
   -- lsp stuff
@@ -215,19 +211,6 @@ return {
     opts = function()
       return require "configs.mason"
     end,
-    -- config = function(_, opts)
-    --   dofile(vim.g.base46_cache .. "mason")
-    --   require("mason").setup(opts)
-    --
-    --   -- custom nvchad cmd to install all mason binaries listed
-    --   vim.api.nvim_create_user_command("MasonInstallAll", function()
-    --     if opts.ensure_installed and #opts.ensure_installed > 0 then
-    --       vim.cmd("MasonInstall " .. table.concat(opts.ensure_installed, " "))
-    --     end
-    --   end, {})
-    --
-    --   vim.g.mason_binaries_list = opts.ensure_installed
-    -- end,
   },
 
   {
@@ -235,54 +218,6 @@ return {
     event = "User FilePost",
     config = function()
       require "configs.lspconfig"
-    end,
-  },
-
-  -- load luasnips + cmp related in insert mode only
-  {
-    "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
-    dependencies = {
-      {
-        -- snippet plugin
-        "L3MON4D3/LuaSnip",
-        dependencies = "rafamadriz/friendly-snippets",
-        opts = { history = true, updateevents = "TextChanged,TextChangedI" },
-        config = function(_, opts)
-          require "configs.luasnip"(opts)
-        end,
-      },
-
-      -- autopairing of (){}[] etc
-      {
-        "windwp/nvim-autopairs",
-        opts = {
-          fast_wrap = {},
-          disable_filetype = { "TelescopePrompt", "vim" },
-        },
-        config = function(_, opts)
-          require("nvim-autopairs").setup(opts)
-
-          -- setup cmp for autopairs
-          local cmp_autopairs = require "nvim-autopairs.completion.cmp"
-          require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
-        end,
-      },
-
-      -- cmp sources plugins
-      {
-        "saadparwaiz1/cmp_luasnip",
-        "hrsh7th/cmp-nvim-lua",
-        "hrsh7th/cmp-nvim-lsp",
-        "hrsh7th/cmp-buffer",
-        "hrsh7th/cmp-path",
-      },
-    },
-    opts = function()
-      return require "configs.cmp"
-    end,
-    config = function(_, opts)
-      require("cmp").setup(opts)
     end,
   },
 
@@ -305,88 +240,14 @@ return {
   {
     "desdic/macrothis.nvim",
     opts = {},
-    keys = {
-      {
-        "<Leader>kkd",
-        function()
-          require("macrothis").delete()
-        end,
-        desc = "[D]elete",
-      },
-      {
-        "<Leader>kke",
-        function()
-          require("macrothis").edit()
-        end,
-        desc = "[E]dit",
-      },
-      {
-        "<Leader>kkl",
-        function()
-          require("macrothis").load()
-        end,
-        desc = "[L]oad",
-      },
-      {
-        "<Leader>kkn",
-        function()
-          require("macrothis").rename()
-        end,
-        desc = "Re[n]ame",
-      },
-      {
-        "<Leader>kkq",
-        function()
-          require("macrothis").quickfix()
-        end,
-        desc = "Run macro on all files in [q]uickfix",
-      },
-      {
-        "<Leader>kkr",
-        function()
-          require("macrothis").run()
-        end,
-        desc = "[R]un macro",
-      },
-      {
-        "<Leader>kks",
-        function()
-          require("macrothis").save()
-        end,
-        desc = "[S]ave",
-      },
-      {
-        "<Leader>kkx",
-        function()
-          require("macrothis").register()
-        end,
-        desc = "Edit register",
-      },
-      {
-        "<Leader>kkp",
-        function()
-          require("macrothis").copy_register_printable()
-        end,
-        desc = "Co[p]y register as printable",
-      },
-      {
-        "<Leader>kkm",
-        function()
-          require("macrothis").copy_macro_printable()
-        end,
-        desc = "Copy [m]acro as printable",
-      },
-    },
   },
   {
     "onsails/diaglist.nvim",
-    lazy = false,
     debug = false,
   },
 
   {
     "anuvyklack/hydra.nvim",
-    lazy = false,
     config = function()
       require "configs.hydra"
     end,
@@ -399,7 +260,6 @@ return {
 
   {
     "natecraddock/workspaces.nvim",
-    lazy = false,
 
     config = function()
       require("workspaces").setup {
@@ -433,7 +293,6 @@ return {
 
   {
     "yorickpeterse/nvim-window",
-    lazy = false,
     config = function()
       require("nvim-window").setup {
         normal_hl = "Normal",
@@ -445,12 +304,10 @@ return {
 
   {
     "sindrets/winshift.nvim",
-    lazy = false,
   },
 
   {
     "kdheepak/lazygit.nvim",
-    lazy = false,
     config = function()
       require("lazy").setup {
         {
@@ -471,10 +328,6 @@ return {
     opts = function()
       return require "configs.nvimtree"
     end,
-    config = function(_, opts)
-      dofile(vim.g.base46_cache .. "nvimtree")
-      require("nvim-tree").setup(opts)
-    end,
   },
 
   {
@@ -485,7 +338,6 @@ return {
       return require "configs.telescope"
     end,
     config = function(_, opts)
-      -- dofile(vim.g.base46_cache .. "telescope")
       local telescope = require "telescope"
       telescope.setup(opts)
 
@@ -499,13 +351,8 @@ return {
   -- Only load whichkey after all the gui
   {
     "folke/which-key.nvim",
-    lazy = false,
     keys = { "<leader>", "<c-r>", "<c-w>", '"', "'", "`", "c", "v", "g" },
     cmd = "WhichKey",
-    config = function(_, opts)
-      dofile(vim.g.base46_cache .. "whichkey")
-      require("which-key").setup(opts)
-    end,
   },
   {
     "ThePrimeagen/harpoon",
@@ -532,12 +379,10 @@ return {
           },
         },
       }
-      -- require("notify").setup({
-      --   background_colour = "#000000"
-      -- })
     end,
     dependencies = {
       "MunifTanjim/nui.nvim",
+      -- Uncomment the next line to use nvim-notify
       -- "rcarriga/nvim-notify",
     },
   },
@@ -545,15 +390,10 @@ return {
     "folke/todo-comments.nvim",
     lazy = false,
     dependencies = { "nvim-lua/plenary.nvim" },
-    opts = {
-      -- your configuration comes here
-      -- or leave it empty to use the default settings
-      -- refer to the configuration section below
-    },
+    opts = {},
   },
   {
     "folke/trouble.nvim",
-    lazy = false,
     cmd = "Trouble",
     opts = {},
   },
