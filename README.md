@@ -1,0 +1,104 @@
+## Plugins
+ - neovim:
+     - neovim/nvim-lspconfig
+         - LSP for neovim
+ - nvim-*:
+     - nvim-lua/plenary.nvim
+         - Lua module to interact with system processes
+     - nvim-telescope/telescope-dap.nvim
+         - Integration of nvim-dap with telescope
+     - nvim-telescope/telescope-fzf-native.nvim
+         - Fzf-native is a `c` port of `fzf`
+     - nvim-telescope/telescope-live-grep-args.nvim
+         - Enable passing arguments to the grep command `rg`
+     - nvim-telescope/telescope.nvim
+         - Really? You don't know telescope?
+     - nvim-tree/nvim-tree.lua
+         - File explorer tree
+     - nvim-tree/nvim-web-devicons
+         - Fork of vim-devicons, provides icons
+     - nvim-treesitter/nvim-treesitter
+         - Configurations and abstraction layer for Nvim tree-sitter
+     - nvim-treesitter/nvim-treesitter-textobjects
+         - Syntax aware text-objects, select, move, swap and peek support
+ - tpope:
+     - tpope/vim-fugitive
+         - *The* git wrapper
+     - tpope/vim-obsession
+         - Continuously updated session files 
+     - tpope/vim-surround
+         - Delete/change/add parenthese/quote/much more with ease
+ - folke:
+     - folke/noice.nvim
+         - Replace the UI for messages, cmdline and the popupmenu
+     - folke/todo-comments.nvi
+         - Highlight, list and search todo comments
+     - folke/trouble.nvim
+         - A pretty diagnostics, references, telescope results, quickfix and location list to help you solve all the trouble your code is causing
+     - folke/which-key.nvim
+         - Create key bindings that stick. WhichKey helps you remember your Neovim keymaps, by showing available keybindings in a popup as you type
+ - mfussenegger:
+     - mfussenegger/nvim-dap
+         - Debug Adapter Protocol client implementation
+     - mfussenegger/nvim-dap-python
+         - Default config for DAP python
+ - sindrets:
+     - sindrets/diffview.nvim
+         - Single tabpage interface for diffs
+     - sindrets/winshift.nvim
+         - Rearrange your windows with ease
+ - stevearc:
+     - stevearc/conform.nvim
+         - Lightweight yet powerful formatter plugin
+     - stevearc/quicker.nvim
+         - Improved UI and workflow for the quickfix list
+ - Others:
+     - aaronhallaert/advanced-git-search.nvim
+         - Search your git history by commit message, content and author
+     - anuvyklack/hydra.nvim
+         - Create custom submodes and menus
+     - desdic/macrothis.nvim
+         - Save and load macros
+     - emaniacs/vim-rest-console
+         - REST console
+     - gioele/vim-autoswap
+         - Please Vim, stop with these swap file messages. Just switch to the correct window!
+     - hrsh7th/nvim-cmp
+         - A completion plugin
+     - iamcco/markdown-preview.nvim
+         - Markdown previewer
+     - kdheepak/lazygit.nvim
+         - Simple terminal UI for git commands
+     - L3MON4D3/LuaSnip
+         - Snippet Engine
+     - lewis6991/gitsigns.nvim
+         - Git integration for buffers
+     - ludovicchabant/vim-gutentags
+         - Manage your tag files
+     - lukas-reineke/indent-blankline.nvim
+         - Indent guides
+     - mangelozzi/rgflow.nvim
+         - Help you get in the flow with ripgrep
+     - natecraddock/workspaces.nvim
+         - Manage workspace directories
+     - numToStr/Comment.nvim
+         - Smart and powerful comment plugin. Support treesitter, dot reaper, left-right/up-down motions, hooks and more
+     - onsails/diaglist.nvim
+         - Live render workspace diagnostics in quickfix with current buf errors on top, buffer diagnostics in loclist
+     - preservim/tagbar
+         - Displays tags in a window, ordered by scope
+     - rbong/vim-flog
+         - A fast, beautiful, and powerful git branch viewer
+     - rcarriga/nvim-dap-ui
+         - UI for nvim-dap
+     - rebelot/kanagawa.nvim
+         - Dark colorscheme inspired by the colors of the famous painting by Katsushika Hokusai
+     - ThePrimeagen/harpoon
+     - Weissle/persistent-breakpoints.nvim
+         - Persistent breakpoints for DAP
+     - williamboman/mason.nvim
+         - Portable package manager for Neovim that runs everywhere Neovim runs. Easily install and manage LSP servers, DAP servers, linters, and formatters
+     - windwp/nvim-autopairs
+         - Autopairs that support multiple characters
+     - yorickpeterse/nvim-window
+         - Easily jump between windows
