@@ -3,15 +3,7 @@ local map = vim.keymap.set
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 
-map("n", "<A-f>", ":Telescope resume  <CR>", { desc = "Telescope resume" })
-map("n", "<A-k>", ":Telescope keymaps <CR>", { desc = "Show (and search) all [k]eymaps" })
-
-map("n", "<C-g>", ":Telescope find_files <CR>", { desc = "Find files" })
-map("n", "<C-x>", ":Telescope find_files follow=true no_ignore=true hidden=true <CR>", { desc = "Find all files" })
-map("n", "<C-f>", ":Telescope live_grep <CR>", { desc = "Live grep" })
-map("n", "<C-b>", ":Telescope buffers <CR>", { desc = "Find buffers" })
-map("n", "<leader>/<CR>", ":Telescope search_history <CR>", { desc = "Search history" })
-map("n", "<leader>//", ":noh<CR>", { desc = "Clear highlights" })
+map("n", "<leader>;", "<cmd> Telescope <CR>", { desc = "Open Telescope" })
 
 -- go to  beginning and end
 map("i", "<C-b>", "<ESC>^i", { desc = "Beginning of line" })
@@ -79,21 +71,24 @@ map("n", "<leader>tL", ":Trouble loclist toggle<CR>", { desc = "[T]rouble [L]ocl
 map("n", "<leader>tQ", ":Trouble qflist toggle<CR>", { desc = "[T]rouble [Q]uickfix" })
 
 -- DAP
-map("n", "<leader>dgg", ":lua require('dap').continue() <CR>", { desc = "Continue debu[g]ging" })
-map("n", "<leader>dg<CR>", ":lua require('dapui').toggle() <CR>", { desc = "Toggle DAP ui" })
-map("n", "<leader>dgw", ":lua require('dapui').eval() <CR>", { desc = "Open floating windows about current [w]ord" })
-map("n", "<leader>dgb", ":lua require('dap').toggle_breakpoint() <CR>", { desc = "Toggle [b]reakpoint" })
-map("n", "<leader>dgf", ":lua require('dap-python').test_method() <CR>", { desc = "Debug [f]unction" })
-map("n", "<leader>dgo", ":lua require('dap').step_over() <CR>", { desc = "DAP step [o]ver method" })
-map("n", "<leader>dgt", ":lua require('dap').step_into() <CR>", { desc = "DAP step in[t]o method" })
-map("n", "<leader>dgp", ":lua require('dap').step_back() <CR>", { desc = "DAP step back ([p]revious)" })
+local dap = require "dap"
+local dapui = require "dapui"
+local dappython = require "dap-python"
+
+map("n", "<leader>dgg", dap.continue, { desc = "Continue debu[g]ging" })
+map("n", "<leader>dg<CR>", dapui.toggle, { desc = "Toggle DAP ui" })
+map("n", "<leader>dgw", dapui.eval, { desc = "Open floating windows about current [w]ord" })
+map("n", "<leader>dgb", dap.toggle_breakpoint, { desc = "Toggle [b]reakpoint" })
+map("n", "<leader>dgf", dappython.test_method, { desc = "Debug [f]unction" })
+map("v", "<leader>dgd", dappython.debug_selection, { desc = "DAP debug selection" })
+map("n", "<leader>dgo", dap.step_over, { desc = "DAP step [o]ver method" })
+map("n", "<leader>dgt", dap.step_into, { desc = "DAP step in[t]o method" })
+map("n", "<leader>dgp", dap.step_back, { desc = "DAP step back ([p]revious)" })
 map("n", "<leader>dgs", function()
   local widgets = require "dap.ui.widgets"
   local sidebar = widgets.sidebar(widgets.scopes)
   sidebar.open { widgth = "50%" }
 end, { desc = "DAP Show debugged [s]copes" })
-map("v", "<leader>dgd", ":lua require('dap-python').debug_selection()", { desc = "DAP debug selection" })
-map("v", "<leader>dgw", ":lua require('dap-python').eval()", { desc = "DAP eval selection" })
 
 -- LSP
 map("n", "<leader>fm", function()
@@ -160,19 +155,24 @@ map("n", "}", "}zz", { desc = "Previous + auto center" })
 map("n", "[[", "[[zz", { desc = "Previous + auto center" })
 map("n", "]]", "]]zz", { desc = "Previous + auto center" })
 
-map("n", "<leader>ww", ":lua require('nvim-window').pick()<CR>", { desc = "Pick window to goto" })
+map("n", "<leader>ww", require("nvim-window").pick, { desc = "Pick window to goto" })
 map("n", "<leader>wm", ":WinShift<CR>", { desc = "Enter move window mode" })
 map("n", "<leader>ws", ":WinShift swap<CR>", { desc = "Swap window, with selection" })
 map("n", "<leader>gg", ":LazyGit<CR>", { desc = "Open lazygit" })
+
+-- Go to - uppercase
 map("n", "gf", ":call search('[A-Z]', 'W')<CR>", { desc = "Go to next uppercase" })
 map("n", "fg", ":call search('[A-Z]', 'bW')<CR>", { desc = "Go to last uppercase" })
-map("n", "glb", ":lua require('gitlab').choose_merge_request()<CR>", { desc = "Gitlab: Choose merge request" })
-map("n", "glr", ":lua require('gitlab').review()<CR>", { desc = "Gitlab: review" })
-map("n", "gls", ":lua require('gitlab').summary()<CR>", { desc = "Gitlab: summary" })
-map("n", "glo", ":lua require('gitlab').open_in_browser()<CR>", { desc = "Gitlab: open in browser" })
-map("n", "glu", ":lua require('gitlab').copy_mr_url()<CR>", { desc = "Gitlab: open in browser" })
-map("n", "glO", ":lua require('gitlab').create_mr()<CR>", { desc = "Gitlab: create MR" })
-map("n", "glaa", ":lua require('gitlab').add_assignee()<CR>", { desc = "Gitlab: add_assignee" })
+
+-- Gitlab
+-- local gitlab = require "gitlab"
+-- map("n", "glb", gitlab.choose_merge_request, { desc = "Gitlab: Choose merge request" })
+-- map("n", "glr", gitlab.review, { desc = "Gitlab: review" })
+-- map("n", "gls", gitlab.summary, { desc = "Gitlab: summary" })
+-- map("n", "glo", gitlab.open_in_browser, { desc = "Gitlab: open in browser" })
+-- map("n", "glu", gitlab.copy_mr_url, { desc = "Gitlab: open in browser" })
+-- map("n", "glO", gitlab.create_mr, { desc = "Gitlab: create MR" })
+-- map("n", "glaa", gitlab.add_assignee, { desc = "Gitlab: add_assignee" })
 
 -- map("n", "glb", gitlab.choose_merge_request)
 -- map("n", "glr", gitlab.review)
@@ -205,30 +205,29 @@ map(
 
 -- Tabufline
 -- cycle through buffers
+local tabufline = require "nvchad.tabufline"
 map("n", "<tab>", function()
-  require("nvchad.tabufline").next()
+  tabufline.next()
 end, { desc = "Goto next buffer" })
 
 map("n", "<S-tab>", function()
-  require("nvchad.tabufline").prev()
+  tabufline.prev()
 end, { desc = "Goto prev buffer" })
 
 -- close buffer + hide terminal buffer
 -- map("n", "<leader>x", function()
---   require("nvchad.tabufline").close_buffer()
+--   tabufline.close_buffer()
 -- end, { desc = "Close buffer" })
 
 -- Comment
+local comment = require "Comment.api"
 map("n", "<leader>ci", function()
-  require("Comment.api").toggle.linewise.current()
+  comment.toggle.linewise.current()
 end, { desc = "Toggle comment" })
 
-map(
-  "v",
-  "<leader>ci",
-  "<ESC><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>",
-  { desc = "Toggle comment" }
-)
+map("v", "<leader>ci", function()
+  comment.toggle.linewise(vim.fin.visualmode())
+end, { desc = "Toggle comment" })
 
 -- LSP
 map("n", "gD", vim.lsp.buf.declaration, { desc = "LSP declaration" })
@@ -237,7 +236,6 @@ map("n", "K", vim.lsp.buf.hover, { desc = "LSP hover" })
 map("n", "gi", vim.lsp.buf.implementation, { desc = "LSP implementation" })
 map("n", "<leader>ls", vim.lsp.buf.signature_help, { desc = "LSP signature help" })
 map("n", "<leader>D", vim.lsp.buf.type_definition, { desc = "LSP definition type" })
---map("n", "<leader>ra", require("nvchad.renamer").open, { desc = "LSP rename" })
 map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "LSP code action" })
 map("n", "gr", vim.lsp.buf.references, { desc = "LSP references" })
 map("n", "<leader>lf", function()
@@ -256,7 +254,7 @@ end, { desc = "Diagnostic previous" })
 -- LSP Workspace
 map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, { desc = "Add workspace folder" })
 map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, { desc = "Add workspace folder" })
-map("n", "]d", function()
+map("n", "<leader>wl", function()
   print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 end, { desc = "List workspace folders" })
 
@@ -267,41 +265,44 @@ map("n", "<C-n>", "<cmd> NvimTreeToggle <CR>", { desc = "Toggle nvimtree" })
 map("n", "<leader>e", "<cmd> NvimTreeFocus <CR>", { desc = "Focus nvimtree" })
 
 -- Telescope
-map("n", "<A-f>", "<cmd> Telescope resume <CR>", { desc = "Resume" })
-map("n", "<A-k>", "<cmd> Telescope keymaps <CR>", { desc = "Show (and search) all [k]eymaps" })
-map("n", "<C-g>", "<cmd> Telescope find_files <CR>", { desc = "Find files" })
-map("n", "<C-x>", "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>", { desc = "Find all" })
-map("n", "<C-f>", "<cmd> Telescope live_grep <CR>", { desc = "Live grep" })
-map("n", "<C-b>", "<cmd> Telescope buffers <CR>", { desc = "Find buffers" })
+local telescope = require "telescope.builtin"
+map("n", "<A-f>", telescope.resume, { desc = "Resume" })
+map("n", "<A-k>", telescope.keymaps, { desc = "Show (and search) all [k]eymaps" })
+map("n", "<C-g>", telescope.find_files, { desc = "Find files" })
+map("n", "<C-x>", function()
+  telescope.find_files { follow = true, no_ignore = true, hidden = true }
+end, { desc = "Find all" })
+map("n", "<C-f>", telescope.live_grep, { desc = "Live grep" })
+map("n", "<C-b>", telescope.buffers, { desc = "Find buffers" })
 
 map("n", "<leader>ff", function()
-  require("telescope.builtin").live_grep { default_text = "<<<<<<< HEAD" }
+  telescope.live_grep { default_text = "<<<<<<< HEAD" }
 end, { desc = "Search for git conflicts" })
 
 -- Live grep
 map("n", "<leader>fg<CR>", function()
-  require("telescope.builtin").live_grep {}
+  telescope.live_grep {}
 end, { desc = "Live grep" })
 
 map("n", "<leader>fg/", function()
-  require("telescope.builtin").live_grep { default_text = vim.fn.getreg "/" }
+  telescope.live_grep { default_text = vim.fn.getreg "/" }
 end, { desc = "Live grep with search term" })
 
 map("n", "<leader>fgw", function()
-  require("telescope.builtin").live_grep { default_text = vim.fn.expand "<cword>" }
+  telescope.live_grep { default_text = vim.fn.expand "<cword>" }
 end, { desc = "Live grep with current word" })
 
 -- Find files
 map("n", "<leader>gf<CR>", function()
-  require("telescope.builtin").find_files {}
+  telescope.find_files {}
 end, { desc = "Find files" })
 
 map("n", "<leader>gf/", function()
-  require("telescope.builtin").find_files { default_text = vim.fn.getreg "/" }
+  telescope.find_files { default_text = vim.fn.getreg "/" }
 end, { desc = "Find files with search term" })
 
 map("n", "<leader>gfw", function()
-  require("telescope.builtin").find_files { default_text = vim.fn.expand "<cword>" }
+  telescope.find_files { default_text = vim.fn.expand "<cword>" }
 end, { desc = "Find files with current word" })
 
 -- Buffer replace
@@ -361,15 +362,15 @@ map("n", "<leader>lc", ":call setloclist([]) | lclose<CR>", { desc = "Clear locl
 map("n", "<leader>fh", "<cmd> Telescope help_tags <CR>", { desc = "Help page" })
 map("n", "<leader>fo", "<cmd> Telescope oldfiles <CR>", { desc = "Find oldfiles" })
 map("n", "<leader>fx<CR>", function()
-  require("telescope.builtin").current_buffer_fuzzy_find {}
+  telescope.current_buffer_fuzzy_find {}
 end, { desc = "Fuzzy find in current buffer" })
 
 map("n", "<leader>fx/", function()
-  require("telescope.builtin").current_buffer_fuzzy_find { default_text = vim.fn.getreg "/" }
+  telescope.current_buffer_fuzzy_find { default_text = vim.fn.getreg "/" }
 end, { desc = "Fuzzy find in current buffer with search term" })
 
 map("n", "<leader>fxw", function()
-  require("telescope.builtin").current_buffer_fuzzy_find { default_text = vim.fn.expand "<cword>" }
+  telescope.current_buffer_fuzzy_find { default_text = vim.fn.expand "<cword>" }
 end, { desc = "Fuzzy find in current buffer with current work" })
 
 map("n", "<leader>wl", "<cmd> Telescope workspaces <CR>", { desc = "Find workspaces" })
@@ -400,36 +401,14 @@ map("n", "<leader>ch", "<cmd> Telescope command_history <CR>", { desc = "telesco
 map("n", "<leader>/", "<cmd> Telescope search_history <CR>", { desc = "telescope search history" })
 
 -- Diaglist: LSP diagnostics in quick/loc list
+local diaglist = require "diaglist"
 map("n", "<leader>dw", function()
-  require("diaglist").open_all_diagnostics()
+  diaglist.open_all_diagnostics()
 end, { desc = "Open all open buffers diagnostics in qflist" })
 
 map("n", "<leader>d0", function()
-  require("diaglist").open_buffer_diagnostics()
+  diaglist.open_buffer_diagnostics()
 end, { desc = "Open current buffer diagnostics in qflist" })
-
-map("n", "<leader>;", "<cmd> Telescope <CR>", { desc = "Open Telescope" })
-
--- Terminal
-map({ "n", "t" }, "<A-i>", function()
-  require("nvterm.terminal").toggle "float"
-end, { desc = "Toggle floating term" })
-
-map({ "n", "t" }, "<A-h>", function()
-  require("nvterm.terminal").toggle "horizontal"
-end, { desc = "Toggle horizontal term" })
-
-map({ "n", "t" }, "<A-v>", function()
-  require("nvterm.terminal").toggle "vertical"
-end, { desc = "Toggle vertical term" })
-
-map("n", "<leader>h", function()
-  require("nvterm.terminal").new "horizontal"
-end, { desc = "New horizontal term" })
-
-map("n", "<leader>v", function()
-  require("nvterm.terminal").new "vertical"
-end, { desc = "New vertical term" })
 
 -- WhichKey
 map("n", "<leader>wK", function()
@@ -443,12 +422,13 @@ map("n", "<leader>wk", function()
 end, { desc = "Which-key query lookup" })
 
 -- Git hunk
+local gitsigns = require "gitsigns"
 map("n", "]c", function()
   if vim.wo.diff then
     return "]c"
   end
   vim.schedule(function()
-    require("gitsigns").next_hunk()
+    gitsigns.next_hunk()
   end)
   return "<Ignore>"
 end, { desc = "Jump to next hunk" })
@@ -458,15 +438,28 @@ map("n", "[c", function()
     return "[c"
   end
   vim.schedule(function()
-    require("gitsigns").prev_hunk()
+    gitsigns.prev_hunk()
   end)
   return "<Ignore>"
 end, { desc = "Jump to prev hunk" })
 
-map("n", "<leader>rh", require("gitsigns").reset_hunk, { desc = "Git Reset hunk" })
-map("n", "<leader>ph", require("gitsigns").preview_hunk, { desc = "Git Preview hunk" })
-map("n", "<leader>bb", require("gitsigns").blame_line, { desc = "Git Blame line" })
-map("n", "<leader>bd", require("gitsigns").toggle_deleted, { desc = "Git Toggle deleted" })
+map("n", "<leader>rh", gitsigns.reset_hunk, { desc = "Git Reset hunk" })
+map("n", "<leader>ph", gitsigns.preview_hunk, { desc = "Git Preview hunk" })
+map("n", "<leader>bb", gitsigns.blame_line, { desc = "Git Blame line" })
+map("n", "<leader>bd", gitsigns.toggle_deleted, { desc = "Git Toggle deleted" })
+
+-- Macrothis
+local macrothis = require "macrothis"
+map("n", "<leader>kkd", macrothis.delete, { desc = "Macro: [d]elete" })
+map("n", "<leader>kke", macrothis.edit, { desc = "Macro: [e]dit" })
+map("n", "<leader>kkl", macrothis.load, { desc = "Macro: [l]oad" })
+map("n", "<leader>kkn", macrothis.rename, { desc = "Macro: re[n]ame" })
+map("n", "<leader>kkq", macrothis.quickfix, { desc = "Macro: [q]uickfix" })
+map("n", "<leader>kkr", macrothis.run, { desc = "Macro: [r]un" })
+map("n", "<leader>kks", macrothis.save, { desc = "Macro: [s]ave" })
+map("n", "<leader>kkx", macrothis.register, { desc = "Macro: edit register" })
+map("n", "<leader>kkpr", macrothis.copy_register_printable, { desc = "Macro: as [p]rintable [r]egister" })
+map("n", "<leader>kkpm", macrothis.copy_macro_printable, { desc = "Macro: as [p]rintable [m]acro" })
 
 -- Override all delete/yank/paste to use the registers M by default
 map({ "n", "v" }, "y", '"my', { desc = "Yank", remap = false })
