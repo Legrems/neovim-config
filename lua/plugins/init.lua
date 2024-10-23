@@ -205,12 +205,26 @@ return {
     end,
   },
 
+  {
+    "pmizio/typescript-tools.nvim",
+    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+    opts = {},
+  },
+
   -- lsp stuff
   {
     "williamboman/mason.nvim",
     cmd = { "Mason", "MasonInstall", "MasonInstallAll", "MasonUpdate" },
     opts = function()
       return require "configs.mason"
+    end,
+  },
+
+  {
+    "williamboman/mason-lspconfig.nvim",
+    lazy = false,
+    opts = function()
+      return require "configs.mason-lspconfig"
     end,
   },
 
@@ -305,6 +319,7 @@ return {
 
   {
     "sindrets/winshift.nvim",
+    lazy = false,
   },
 
   {
@@ -397,5 +412,65 @@ return {
     "folke/trouble.nvim",
     cmd = "Trouble",
     opts = {},
+  },
+  {
+    "kndndrj/nvim-dbee",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+    },
+    build = function()
+      -- Install tries to automatically detect the install method.
+      -- if it fails, try calling it with one of these parameters:
+      --    "curl", "wget", "bitsadmin", "go"
+      require("dbee").install()
+    end,
+    config = function()
+      require("dbee").setup {
+
+        sources = {
+          require("dbee.sources").MemorySource:new {
+            {
+              name = "localhost",
+              type = "postgres",
+              url = "postgres://postgres:123@localhost:5432/gestion-isp?sslmode=disable",
+            },
+            -- ...
+          },
+        },
+      }
+    end,
+  },
+  {
+    "hat0uma/csvview.nvim",
+    config = function()
+      require("csvview").setup()
+    end,
+    init = function()
+      require("csvview").setup {
+        view = {
+          display_mode = "border",
+        },
+      }
+    end,
+  },
+  {
+    "cameron-wags/rainbow_csv.nvim",
+    config = true,
+    lazy = false,
+    ft = {
+      "csv",
+      "tsv",
+      "csv_semicolon",
+      "csv_whitespace",
+      "csv_pipe",
+      "rfc_csv",
+      "rfc_semicolon",
+    },
+    cmd = {
+      "RainbowDelim",
+      "RainbowDelimSimple",
+      "RainbowDelimQuoted",
+      "RainbowMultiDelim",
+    },
   },
 }

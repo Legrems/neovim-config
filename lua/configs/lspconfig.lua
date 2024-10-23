@@ -4,7 +4,7 @@ require("nvchad.configs.lspconfig").defaults()
 local lspconfig = require "lspconfig"
 
 -- EXAMPLE
-local servers = { "html", "cssls" }
+local servers = { "html", "cssls", "volar", "typescript-tools", "tsserver" }
 local nvlsp = require "nvchad.configs.lspconfig"
 
 -- lsps with default config
@@ -39,14 +39,19 @@ require("lspconfig").pyright.setup {
         -- ignore = { "*" }, -- using ruff
         -- typecheckingmode = "off", -- using mypy
         diagnosticseverityoverrides = {
-          reportmissingimports = false,
-          -- reportattributeaccessissue = false,
+          reportMissingImports = false,
           reportUnusedVariable = false,
+          reportIncompatibleVariableOverride = false,
+          -- reportAttributeAccessIssue = false,
         },
       },
     },
   },
 }
+
+-- require("lspconfig").tsserver.setup {
+--   filetypes = { "html", "javascript", "htmldjango" },
+-- }
 
 -- require("lspconfig").pylsp.setup {
 --   settings = {
@@ -60,3 +65,36 @@ require("lspconfig").pyright.setup {
 --     },
 --   },
 -- }
+--
+
+local configs = require "lspconfig.configs"
+
+if not configs.jinja_lsp then
+  configs.jinja_lsp = {
+    default_config = {
+      name = "jinja-lsp",
+      cmd = { "/home/legrems/.cargo/bin/jinja-lsp" },
+      filetypes = { "jinja", "rust", "htmldjango", "javascript" },
+      root_dir = function()
+        return "."
+      end,
+      init_options = {
+        templates = "./templates",
+        backend = { "./src" },
+        lang = "rust",
+      },
+    },
+  }
+end
+
+local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
+
+lspconfig.jinja_lsp.setup {
+  capabilities = capabilities,
+}
+
+lspconfig.tailwindcss.setup {
+  cmd = { "tailwindcss-language-server", "--stdio" },
+  filetypes = { "html", "css", "javascript", "htmldjango" },
+  root_dir = lspconfig.util.root_pattern("tailwind.config.js", "tailwind.config.cjs", "tailwind.config.ts"),
+}

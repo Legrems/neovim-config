@@ -293,6 +293,7 @@ local options = {
           ["<C-v>"] = custom_actions.multi_selection_vsplit,
           ["<C-X>"] = custom_actions.multi_selection_split,
           ["<C-T>"] = custom_actions.multi_selection_tab,
+          -- ["<C-e>"] = custom_actions.set_extension_files,
         },
         n = i,
       },
