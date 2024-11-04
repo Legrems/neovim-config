@@ -203,6 +203,9 @@ map(
   { desc = "Add TODO comment + add to qflist" }
 )
 
+map("n", "<leader>dtt", ":TodoTelescope keywords=TODO<CR>", { desc = "Show TODOs" })
+map("n", "<leader>dtf", ":TodoTelescope keywords=TODO,FIX<CR>", { desc = "Show TODOs + FIX" })
+
 -- Tabufline
 -- cycle through buffers
 local tabufline = require "nvchad.tabufline"
