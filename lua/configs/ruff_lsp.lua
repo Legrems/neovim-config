@@ -1,8 +1,8 @@
 -- See: https://github.com/neovim/nvim-lspconfig/tree/54eb2a070a4f389b1be0f98070f81d23e2b1a715#suggested-configuration
 local opts = { noremap = true, silent = true }
-vim.keymap.set("n", "<space>k", vim.diagnostic.open_float, opts)
-vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
-vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
+-- vim.keymap.set("n", "<space>k", vim.diagnostic.open_float, opts)
+-- vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
+-- vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
 -- vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 
 -- Use an on_attach function to only map the following keys
@@ -27,7 +27,7 @@ local on_attach = function(_, bufnr)
 
   -- vim.keymap.set("n", "<space>D", vim.lsp.buf.type_definition, bufopts)
   -- vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, bufopts)
-  vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, bufopts)
+  -- vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, bufopts)
   -- vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
   -- vim.keymap.set("n", "<space>f", function()
   --   vim.lsp.buf.format { async = true }

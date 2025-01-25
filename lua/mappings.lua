@@ -27,7 +27,7 @@ map("n", "<C-k>", "<C-w>k", { desc = "Window up" })
 
 -- ["<C-d>"] = { "<cmd> tab Git diff %<CR>", "Git diff this file" },
 map("n", "<C-d>", "<cmd> DiffviewOpen -- %<CR>", { desc = "Git diff this file" })
-map("n", "<C-o>", "<cmd> DiffviewFileHistory %<CR>", { desc = "Git history diff this file" })
+-- map("n", "<C-o>", "<cmd> DiffviewFileHistory %<CR>", { desc = "Git history diff this file" })
 map("n", "<C-a-d>", "<cmd> DiffviewClose<CR>", { desc = "Close git diff" })
 -- ["<C-p>"] = { "<cmd> tab Git diff<CR>", "Git diff global" },
 map("n", "<C-p>", "<cmd> DiffviewOpen<CR>", { desc = "Git diff global" })
@@ -117,8 +117,10 @@ map(
 )
 
 -- Fn shortcuts
+-- Tabs management
 map("n", "<F1>", "<cmd> tabprevious<CR>", { desc = "Previous tab" })
 map("n", "<F2>", "<cmd> tabnext<CR>", { desc = "Next tab" })
+map("n", "<leader>tc", ":tabclose<CR>", { desc = "Close tabs" })
 map("n", "<F3>", "<cmd> Flog -all<CR>", { desc = "Show git tree" })
 map("n", "<F4>", "<cmd> tab Git show -", { desc = "Git show N last commits" })
 map("n", "<C-t>", "<cmd> TagbarToggle<CR>", { desc = "Show tagbar" })
@@ -140,6 +142,7 @@ map("n", "<leader>gnb", ":Git checkout -b ", { desc = "Checkout to a new branch"
 map("n", "<leader>gri", ":Git rebase -i HEAD~", { desc = "Git rebase interactive from HEAD" })
 map("n", "<leader>grm", ":Git rebase -i master", { desc = "Git rebase interactive from master" })
 map("n", "<leader>grr", ":Git rebase -i ", { desc = "Git rebase interactive from <select>" })
+map("n", "<leader>gR", ":Git reset --soft HEAD~", { desc = "Git 'undo' last commit" })
 
 -- Markdown
 -- ["<leader>mkd"] = { "<cmd>lua vim.api.nvim_create_user_command('PeekOpen', require('peek').open, {})<CR>", "Open markdown preview" },
@@ -208,14 +211,14 @@ map("n", "<leader>dtf", ":TodoTelescope keywords=TODO,FIX<CR>", { desc = "Show T
 
 -- Tabufline
 -- cycle through buffers
-local tabufline = require "nvchad.tabufline"
-map("n", "<tab>", function()
-  tabufline.next()
-end, { desc = "Goto next buffer" })
-
-map("n", "<S-tab>", function()
-  tabufline.prev()
-end, { desc = "Goto prev buffer" })
+-- local tabufline = require "nvchad.tabufline"
+-- map("n", "<tab>", function()
+--   tabufline.next()
+-- end, { desc = "Goto next buffer" })
+--
+-- map("n", "<S-tab>", function()
+--   tabufline.prev()
+-- end, { desc = "Goto prev buffer" })
 
 -- close buffer + hide terminal buffer
 -- map("n", "<leader>x", function()
@@ -224,7 +227,6 @@ end, { desc = "Goto prev buffer" })
 
 -- Comment
 -- https://github.com/numToStr/Comment.nvim?tab=readme-ov-file#basic-mappings
-
 -- LSP
 map("n", "gD", vim.lsp.buf.declaration, { desc = "LSP declaration" })
 map("n", "gd", vim.lsp.buf.definition, { desc = "LSP definition" })

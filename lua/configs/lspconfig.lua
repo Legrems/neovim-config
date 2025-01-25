@@ -4,8 +4,14 @@ require("nvchad.configs.lspconfig").defaults()
 local lspconfig = require "lspconfig"
 
 -- EXAMPLE
-local servers = { "html", "cssls", "volar", "typescript-tools", "tsserver" }
+local servers = { "html", "cssls", "volar", "typescript-tools" }
+-- local servers = { "html", "cssls", "volar", "typescript-tools", "tsserver" }
 local nvlsp = require "nvchad.configs.lspconfig"
+
+-- lsp settings (for overriding per client)
+-- local handlers = {
+--   ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { focusable = false }),
+-- }
 
 -- lsps with default config
 for _, lsp in ipairs(servers) do
@@ -13,36 +19,34 @@ for _, lsp in ipairs(servers) do
     on_attach = nvlsp.on_attach,
     on_init = nvlsp.on_init,
     capabilities = nvlsp.capabilities,
+    -- handlers = handlers,
   }
 end
-
--- lsp settings (for overriding per client)
-local handlers = {
-  ["textdocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" }),
-  ["textdocument/signaturehelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" }),
-}
 
 require("lspconfig").pyright.setup {
   on_init = nvlsp.on_init,
   on_attach = nvlsp.on_attach,
   capabilities = nvlsp.capabilities,
-  handlers = handlers,
+  -- handlers = handlers,
 
   settings = {
     pyright = {
       -- options available here: https://github.com/microsoft/pyright/blob/main/docs/settings.md
-      disableorganizeimports = true, -- using ruff
-      -- disablelanguageservices = true, -- using ruff
+      disableOrganizeImports = true, -- using ruff
+      -- disableLanguageServices = true, -- using ruff
     },
     python = {
       analysis = {
         -- ignore = { "*" }, -- using ruff
-        -- typecheckingmode = "off", -- using mypy
-        diagnosticseverityoverrides = {
+        -- typeCheckingMode = "off", -- using mypy
+        diagnosticSeverityOverrides = {
+          -- https://github.com/microsoft/pyright/blob/main/docs/configuration.md#diagnostic-settings-defaults
           reportMissingImports = false,
           reportUnusedVariable = false,
-          reportIncompatibleVariableOverride = false,
-          -- reportAttributeAccessIssue = false,
+          reportIncompatibleVariableOverride = "none",
+          reportIncompatibleMethodOverride = "none",
+          reportAssignmentType = false,
+          reportAttributeAccessIssue = false,
         },
       },
     },

@@ -381,21 +381,6 @@ return {
     opts = function()
       return require "configs.noice"
     end,
-    init = function()
-      require("noice").setup {
-        routes = {
-          {
-            view = "notify",
-            filter = { event = "msg_showmode" },
-          },
-        },
-        lsp = {
-          signature = {
-            enabled = false,
-          },
-        },
-      }
-    end,
     dependencies = {
       "MunifTanjim/nui.nvim",
       -- Uncomment the next line to use nvim-notify
@@ -472,5 +457,11 @@ return {
       "RainbowDelimQuoted",
       "RainbowMultiDelim",
     },
+  },
+  {
+    "yarospace/lua-console.nvim",
+    lazy = true,
+    keys = "`",
+    opts = {},
   },
 }

@@ -16,6 +16,10 @@ M.base46 = {
 
 M.ui = {
   theme = "onedark",
+  tabufline = {
+    enabled = false,
+    -- order = { "tabs", "buffers" },
+  },
   statusline = {
     theme = "default",
     separator_style = "arrow",
