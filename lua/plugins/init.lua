@@ -233,6 +233,7 @@ return {
     event = "User FilePost",
     config = function()
       require "configs.lspconfig"
+      require "configs.ruff_lsp"
     end,
   },
 
@@ -463,5 +464,9 @@ return {
     lazy = true,
     keys = "`",
     opts = {},
+  },
+  {
+    "OXY2DEV/markview.nvim",
+    lazy = false,
   },
 }

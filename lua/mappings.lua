@@ -172,7 +172,7 @@ map("n", "fg", ":call search('[A-Z]', 'bW')<CR>", { desc = "Go to last uppercase
 -- map("n", "glb", gitlab.choose_merge_request, { desc = "Gitlab: Choose merge request" })
 -- map("n", "glr", gitlab.review, { desc = "Gitlab: review" })
 -- map("n", "gls", gitlab.summary, { desc = "Gitlab: summary" })
--- map("n", "glo", gitlab.open_in_browser, { desc = "Gitlab: open in browser" })
+-- map("n", "glo", gitlab.open_in_browser, { desc = "Gitlab: open in browser" })mappings
 -- map("n", "glu", gitlab.copy_mr_url, { desc = "Gitlab: open in browser" })
 -- map("n", "glO", gitlab.create_mr, { desc = "Gitlab: create MR" })
 -- map("n", "glaa", gitlab.add_assignee, { desc = "Gitlab: add_assignee" })
@@ -247,6 +247,11 @@ end, { desc = "Diagnostic previous" })
 map("n", "]d", function()
   vim.diagnostic.goto_next { float = { border = "rounded" } }
 end, { desc = "Diagnostic previous" })
+
+map("n", "gK", function()
+  local new_config = not vim.diagnostic.config().virtual_lines
+  vim.diagnostic.config { virtual_lines = new_config }
+end, { desc = "Toggle diagnostic virtual_lines" })
 -- map("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Diagnostic set location list" })
 
 -- LSP Workspace
@@ -306,14 +311,42 @@ end, { desc = "Find files with current word" })
 -- Buffer replace
 map("n", "<leader>br<CR>", function()
   -- ":execute '%s/' . input('Search term >') . '/' . input('Replace by >', '') . '/g | update' <CR>",
+
+  local pattern = vim.fn.input "Search term:"
+  if pattern == "" then
+    return
+  end
+
+  local replace = vim.fn.input("Replace '" .. pattern .. "' by:")
+
+  if replace == "" then
+    return
+  end
+
+  local command = "%s/" .. pattern .. "/" .. replace .. "/g"
+  vim.fn.execute(command)
 end, { desc = "Replace pattern in current buffer" })
 
 map("n", "<leader>br/", function()
-  -- ":execute '%s/' . input('Search term >', getreg('/')) . '/' . input('Replace by >', '') . '/g | update' <CR>",
+  local replace = vim.fn.input("Replace '" .. vim.fn.getreg "/" .. "' by:")
+
+  if replace == "" then
+    return
+  end
+
+  local command = "%s/" .. vim.fn.getreg "/" .. "/" .. replace .. "/g"
+  vim.fn.execute(command)
 end, { desc = "Replace search term pattern in current buffer" })
 
 map("n", "<leader>brw", function()
-  -- ":execute '%s/' . input('Search term >', expand('<cword>')) . '/' . input('Replace by >', '') . '/g | update' <CR>",
+  local replace = vim.fn.input("Replace '" .. vim.fn.expand "<cword>" .. "' by:")
+
+  if replace == "" then
+    return
+  end
+
+  local command = "%s/" .. vim.fn.expand "<cword>" .. "/" .. replace .. "/g"
+  vim.fn.execute(command)
 end, { desc = "Replace current word pattern in current buffer" })
 
 -- Quickfix list
