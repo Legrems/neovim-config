@@ -96,6 +96,7 @@ local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protoc
 lspconfig.jinja_lsp.setup {
   capabilities = capabilities,
 }
+lspconfig.gopls.setup {}
 
 lspconfig.tailwindcss.setup {
   cmd = { "tailwindcss-language-server", "--stdio" },
