@@ -137,14 +137,14 @@ return {
           lua = { "stylua" },
           -- You can use a function here to determine the formatters dynamically
           python = function(bufnr)
-            if conform.get_formatter_info("ruff_format", bufnr).available then
+            if conform.get_formatter_info("black", bufnr).available then
               return { "isort", "black" }
-              -- return { "ruff_format" }
             else
-              return { "isort", "black" }
+              return { "ruff_format" }
             end
           end,
           -- javascript = { "prettierd", "prettier", stop_after_first = true },
+          vue = { "prettierd" },
         },
         options = {
           lang_to_formatters = {
@@ -468,5 +468,22 @@ return {
   {
     "OXY2DEV/markview.nvim",
     lazy = false,
+  },
+  {
+    "github/copilot.vim",
+    lazy = false,
+  },
+  {
+    "CopilotC-Nvim/CopilotChat.nvim",
+    lazy = false,
+    dependencies = {
+      { "github/copilot.vim" }, -- or zbirenbaum/copilot.lua
+      { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
+    },
+    build = "make tiktoken", -- Only on MacOS or Linux
+    opts = {
+      -- See Configuration section for options
+    },
+    -- See Commands section for default commands if you want to lazy load on them
   },
 }

@@ -4,7 +4,7 @@ require("nvchad.configs.lspconfig").defaults()
 local lspconfig = require "lspconfig"
 
 -- EXAMPLE
-local servers = { "html", "cssls", "volar", "typescript-tools" }
+local servers = { "html", "cssls", "typescript-tools" }
 -- local servers = { "html", "cssls", "volar", "typescript-tools", "tsserver" }
 local nvlsp = require "nvchad.configs.lspconfig"
 
@@ -78,7 +78,7 @@ if not configs.jinja_lsp then
     default_config = {
       name = "jinja-lsp",
       cmd = { "/home/legrems/.cargo/bin/jinja-lsp" },
-      filetypes = { "jinja", "rust", "htmldjango", "javascript" },
+      filetypes = { "jinja", "rust", "htmldjango" },
       root_dir = function()
         return "."
       end,
@@ -102,4 +102,25 @@ lspconfig.tailwindcss.setup {
   cmd = { "tailwindcss-language-server", "--stdio" },
   filetypes = { "html", "css", "javascript", "htmldjango" },
   root_dir = lspconfig.util.root_pattern("tailwind.config.js", "tailwind.config.cjs", "tailwind.config.ts"),
+}
+
+lspconfig.volar.setup {
+  capabilities = capabilities,
+  filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+  init_options = {
+    vue = {
+      hybridMode = false,
+    },
+    -- typescript = {
+    --   -- replace with your global TypeScript library path
+    --   -- tsdk = "/path/to/node_modules/typescript/lib",
+    -- },
+  },
+  on_new_config = function(new_config, new_root_dir)
+    local lib_path = vim.fs.find("node_modules/typescript/lib", { path = new_root_dir, upward = true })[1]
+    if lib_path then
+      -- print("lib path", lib_path)
+      new_config.init_options.typescript.tsdk = lib_path
+    end
+  end,
 }

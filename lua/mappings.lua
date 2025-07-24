@@ -147,6 +147,9 @@ map("n", "<leader>gR", ":Git reset --soft HEAD~", { desc = "Git 'undo' last comm
 -- Markdown
 -- ["<leader>mkd"] = { "<cmd>lua vim.api.nvim_create_user_command('PeekOpen', require('peek').open, {})<CR>", "Open markdown preview" },
 -- ["<leader>mkc"] = { "<cmd>lua vim.api.nvim_create_user_command('PeekClose', require('peek').close, {})<CR>", "Open markdown preview" },
+map("n", "<leader>mk", ":Markview toggle<CR>", { desc = "Toggle markdown view" })
+
+map("n", "<leader>csv", ":CsvViewToggle<CR>", { desc = "Toggle CSV view" })
 
 -- Movement n + v
 map("n", "n", "nzz", { desc = "Next + auto center" })
@@ -166,6 +169,24 @@ map("n", "<leader>gg", ":LazyGit<CR>", { desc = "Open lazygit" })
 -- Go to - uppercase
 map("n", "gf", ":call search('[A-Z]', 'W')<CR>", { desc = "Go to next uppercase" })
 map("n", "fg", ":call search('[A-Z]', 'bW')<CR>", { desc = "Go to last uppercase" })
+
+vim.api.nvim_create_user_command("FormatDisable", function(args)
+  if args.bang then
+    -- FormatDisable! will disable formatting just for this buffer
+    vim.b.disable_autoformat = true
+  else
+    vim.g.disable_autoformat = true
+  end
+end, {
+  desc = "Disable autoformat-on-save",
+  bang = true,
+})
+vim.api.nvim_create_user_command("FormatEnable", function()
+  vim.b.disable_autoformat = false
+  vim.g.disable_autoformat = false
+end, {
+  desc = "Re-enable autoformat-on-save",
+})
 
 -- Gitlab
 -- local gitlab = require "gitlab"
@@ -234,7 +255,7 @@ map("n", "K", vim.lsp.buf.hover, { desc = "LSP hover" })
 map("n", "gi", vim.lsp.buf.implementation, { desc = "LSP implementation" })
 map("n", "<leader>ls", vim.lsp.buf.signature_help, { desc = "LSP signature help" })
 map("n", "<leader>D", vim.lsp.buf.type_definition, { desc = "LSP definition type" })
-map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "LSP code action" })
+map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "LSP code action" })
 map("n", "gr", vim.lsp.buf.references, { desc = "LSP references" })
 map("n", "<leader>lf", function()
   vim.diagnostic.open_float { border = "rounded" }
@@ -260,8 +281,6 @@ map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, { desc = "Add worksp
 map("n", "<leader>wl", function()
   print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 end, { desc = "List workspace folders" })
-
-map("v", "<leader>ca", vim.lsp.buf.code_action, { desc = "LSP code action" })
 
 -- Nvimtree toggle + focus
 map("n", "<C-n>", "<cmd> NvimTreeToggle <CR>", { desc = "Toggle nvimtree" })
@@ -360,12 +379,43 @@ map("n", "<leader>qc", ":call setqflist([]) | cclose<CR>", { desc = "Clear qflis
 -- Quickflix replace all
 map("n", "<leader>qr<CR>", function()
   -- ":execute 'cfdo' '%s/' . input('Search term >') . '/' . input('Replace by >') . '/gI | update' <CR>",
+  local pattern = vim.fn.input "Search term:"
+  if pattern == "" then
+    return
+  end
+
+  local replace = vim.fn.input("Replace '" .. pattern .. "' by:")
+
+  if replace == "" then
+    return
+  end
+
+  local command = "cfdo %s/" .. pattern .. "/" .. replace .. "/g"
+  vim.fn.execute(command)
 end, { desc = "Replace pattern in all qflist" })
+
 map("n", "<leader>qr/", function()
   -- ":execute 'cfdo' '%s/' . input('Search term >', getreg('/')) . '/' . input('Replace by >') . '/gI | update' <CR>",
+  local replace = vim.fn.input("Replace '" .. vim.fn.getreg "/" .. "' by:")
+
+  if replace == "" then
+    return
+  end
+
+  local command = "cfdo %s/" .. vim.fn.getreg "/" .. "/" .. replace .. "/g"
+  vim.fn.execute(command)
 end, { desc = "Replace search term in all qflist" })
+
 map("n", "<leader>qrw", function()
   -- ":execute 'cfdo' '%s/' . input('Search term >', expand('<cword>')) . '/' . input('Replace by >') . '/gI | update' <CR>",
+  local replace = vim.fn.input("Replace '" .. vim.fn.expand "<cword>" .. "' by:")
+
+  if replace == "" then
+    return
+  end
+
+  local command = "cfdo %s/" .. vim.fn.expand "<cword>" .. "/" .. replace .. "/g"
+  vim.fn.execute(command)
 end, { desc = "Replace current work in all qflist" })
 
 -- Quickfix "search"
@@ -497,3 +547,12 @@ map({ "n", "v" }, "d", '"md', { desc = "Delete", remap = false })
 
 map({ "n", "v" }, "<leader>y", '"+y', { desc = "Yank into system register", remap = false })
 map({ "n", "v" }, "<leader>p", '"+p', { desc = "Paste into system register", remap = false })
+
+-- Custom Macro
+local esc = vim.api.nvim_replace_termcodes("<ESC>", true, true, true)
+
+vim.fn.setreg("l", 'yiwoprint(f"' .. esc .. "pa: {" .. esc .. 'pa}")' .. esc)
+
+-- Copilot
+map("n", "<leader>cop", "<cmd>Copilot enable<CR>", { desc = "Copilot enable" })
+map("n", "<leader>cok", "<cmd>Copilot disable<CR>", { desc = "Copilot disable" })
