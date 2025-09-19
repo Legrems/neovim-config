@@ -5,7 +5,8 @@ local nvlsp = require "nvchad.configs.lspconfig"
 
 -- lsp settings (for overriding per client)
 -- local handlers = {
---   ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { focusable = false }),
+--   ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" }),
+--   ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" }),
 -- }
 
 vim.lsp.config("*", {
@@ -21,8 +22,8 @@ local servers = {
   "typescript-tools",
   "jinja_lsp",
   "gopls",
-  "tailwindcss",
-  "volar",
+  -- "tailwindcss",
+  "vue_ls",
 }
 
 if vim.fn.executable "pyright" == 1 then

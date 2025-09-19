@@ -8,7 +8,7 @@ local M = {
     },
 
     hover = {
-      enabled = false,
+      enabled = true,
     },
   },
   -- you can enable a preset for easier configuration
@@ -43,6 +43,11 @@ local M = {
       size = {
         width = 120,
         -- height = 10,
+      },
+    },
+    hover = {
+      border = {
+        style = "rounded",
       },
     },
   },
