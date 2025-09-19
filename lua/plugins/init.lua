@@ -232,7 +232,7 @@ return {
     "neovim/nvim-lspconfig",
     event = "User FilePost",
     config = function()
-      require "configs.lspconfig"
+      require "configs.lsp"
       require "configs.ruff_lsp"
     end,
   },
