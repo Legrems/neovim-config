@@ -19,14 +19,18 @@ local servers = {
   "html",
   "cssls",
   "typescript-tools",
-  "pyright",
   "jinja_lsp",
   "gopls",
   "tailwindcss",
   "volar",
-  "ruff",
 }
 
-require("lspconfig")
+if vim.fn.executable "pyright" == 1 then
+  table.insert(servers, "pyright")
+elseif vim.fn.executable "ruff" == 1 then
+  table.insert(servers, "ruff")
+end
 
-vim.lsp.enable(servers) 
+require "lspconfig"
+
+vim.lsp.enable(servers)
