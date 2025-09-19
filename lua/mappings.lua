@@ -94,12 +94,16 @@ map("n", "<leader>dl", "0d$", { desc = "[D]elete [L]ine" })
 -- Don't copy replaced text after pasting in visual mode
 map("x", "p", 'p:let @+=@0<CR>:let @"=@0<CR>', { desc = "Paste without yanking replaced text" })
 
--- Override all delete/yank/paste to use the 'M' register by default
+-- Yank & Paste use the 'm' register.
+-- This keeps your yanked text separate from deleted text.
 map({ "n", "v" }, "y", '"my', { desc = "Yank to 'm' register", remap = false })
 map({ "n", "v" }, "p", '"mp', { desc = "Paste from 'm' register", remap = false })
-map({ "n", "v" }, "d", '"md', { desc = "Delete to 'm' register", remap = false })
 
--- Yank/Paste to/from system clipboard
+-- Delete uses the 'd' register.
+map({ "n", "v" }, "d", '"dd', { desc = "Delete to 'd' register", remap = false })
+map({ "n", "v" }, "<leader>dp", '"dp', { desc = "[D]elete [P]aste from 'd' register" })
+
+-- System clipboard mappings
 map({ "n", "v" }, "<leader>y", '"+y', { desc = "[Y]ank to system clipboard" })
 map({ "n", "v" }, "<leader>p", '"+p', { desc = "[P]aste from system clipboard" })
 
