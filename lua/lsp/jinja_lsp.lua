@@ -18,4 +18,4 @@ if not configs.jinja_lsp then
   }
 end
 
-return {} 
+return {}

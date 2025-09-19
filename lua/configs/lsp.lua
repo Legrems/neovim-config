@@ -22,8 +22,8 @@ local servers = {
   "typescript-tools",
   "jinja_lsp",
   "gopls",
-  -- "tailwindcss",
   "vue_ls",
+  -- "tailwindcss",
 }
 
 if vim.fn.executable "pyright" == 1 then
@@ -32,6 +32,12 @@ elseif vim.fn.executable "ruff" == 1 then
   table.insert(servers, "ruff")
 end
 
-require "lspconfig"
+for _, server_name in ipairs(servers) do
+  local custom_config_path = "lsp." .. server_name:gsub("%-", "_")
+  local ok, custom_config = pcall(require, custom_config_path)
 
-vim.lsp.enable(servers)
+  if ok and custom_config and type(custom_config) == "table" then
+    vim.lsp.config[server_name] = custom_config
+  end
+  vim.lsp.enable(server_name)
+end

@@ -85,7 +85,8 @@ autocmd("FileType", {
       vim.wo.foldlevel = 99
       vim.wo.foldmethod = "expr"
       vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()" -- Use treesitter for folds
-      vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" -- Use treesitter for indentation
+      -- vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" -- Temporarily disable treesitter indentation
+      vim.bo[ev.buf].autoindent = true -- Enable basic autoindent
     end
   end,
 })

@@ -233,7 +233,6 @@ return {
     event = "User FilePost",
     config = function()
       require "configs.lsp"
-      require "configs.ruff_lsp"
     end,
   },
 
