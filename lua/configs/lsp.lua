@@ -22,6 +22,7 @@ local servers = {
   "typescript-tools",
   "jinja_lsp",
   "gopls",
+  "ts_ls",
   "vue_ls",
   -- "tailwindcss",
 }
