@@ -226,6 +226,7 @@ local options = {
       "--line-number",
       "--column",
       "--smart-case",
+      "--pcre2",
     },
     prompt_prefix = "   ",
     selection_caret = "  ",
@@ -341,7 +342,8 @@ local options = {
           ["<C-Space>"] = actions.smart_send_to_qflist,
 
           -- Quote prompt, for passing parameters to vimgrep
-          ["<C-k>"] = lga_actions.quote_prompt(),
+          -- ["<C-k>"] = lga_actions.quote_prompt { prefix = "test" },
+          ["<C-k>"] = lga_actions.quote_prompt { prefix = "test" },
         },
       },
     },

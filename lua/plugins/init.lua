@@ -16,7 +16,23 @@ return {
   { "tpope/vim-obsession", lazy = false },
   { "preservim/tagbar", lazy = false },
   { "ludovicchabant/vim-gutentags", lazy = false },
-  { "emaniacs/vim-rest-console", lazy = false },
+  {
+    "emaniacs/vim-rest-console",
+    lazy = false,
+    config = function()
+      vim.g["gutentags_ctags_tagfile"] = "ctagsfile"
+    end,
+  },
+  -- {
+  --   "rest-nvim/rest.nvim",
+  --   dependencies = {
+  --     "nvim-treesitter/nvim-treesitter",
+  --     opts = function(_, opts)
+  --       opts.ensure_installed = opts.ensure_installed or {}
+  --       table.insert(opts.ensure_installed, "http")
+  --     end,
+  --   },
+  -- },
   { "mfussenegger/nvim-dap", lazy = false },
   {
     "mfussenegger/nvim-lint",
@@ -486,4 +502,21 @@ return {
   --   },
   --   -- See Commands section for default commands if you want to lazy load on them
   -- },
+  -- {
+  --   "legrems/better-telescope-history",
+  --   lazy = false,
+  --   dependencies = {
+  --     "nvim-telescope/telescope.nvim",
+  --     "kkharji/sqlite.lua",
+  --   },
+  --   config = function()
+  --     require("telescope-history").setup {
+  --       -- Configuration options (see below)
+  --     }
+  --
+  --     -- Load the Telescope extension
+  --     require("telescope").load_extension "history"
+  --   end,
+  -- },
+  { "wakatime/vim-wakatime", lazy = false },
 }
