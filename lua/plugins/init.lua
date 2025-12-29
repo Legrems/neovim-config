@@ -80,26 +80,27 @@ return {
   },
   { "nvim-telescope/telescope-live-grep-args.nvim" },
   { "nvim-telescope/telescope-dap.nvim" },
-  -- {
-  --   "harrisoncramer/gitlab.nvim",
-  --   dependencies = {
-  --     "MunifTanjim/nui.nvim",
-  --     "nvim-lua/plenary.nvim",
-  --     "sindrets/diffview.nvim",
-  --     "stevearc/dressing.nvim", -- Recommended but not required. Better UI for pickers.
-  --     "nvim-tree/nvim-web-devicons", -- Recommended but not required. Icons in discussion tree.
-  --   },
-  --   enabled = true,
-  --   build = function()
-  --     require("gitlab.server").build(true)
-  --   end, -- Builds the Go binary
-  --   opts = function()
-  --     return require "configs.gitlab"
-  --   end,
-  --   config = function(_, opts)
-  --     require("gitlab").setup(opts)
-  --   end,
-  -- },
+  {
+    "harrisoncramer/gitlab.nvim",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      "sindrets/diffview.nvim",
+      "stevearc/dressing.nvim", -- Recommended but not required. Better UI for pickers.
+      "nvim-tree/nvim-web-devicons", -- Recommended but not required. Icons in discussion tree.
+    },
+    lazy = false,
+    enabled = true,
+    build = function()
+      require("gitlab.server").build(true)
+    end, -- Builds the Go binary
+    opts = function()
+      return require "configs.gitlab"
+    end,
+    config = function(_, opts)
+      require("gitlab").setup(opts)
+    end,
+  },
   {
     "sindrets/diffview.nvim",
     opts = function()
