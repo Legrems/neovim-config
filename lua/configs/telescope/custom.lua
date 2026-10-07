@@ -1,4 +1,4 @@
--- Implement delta as previewer for diffs
+-- Colored diff previewers for git pickers (same hl groups as diffview)
 
 local previewers = require "telescope.previewers"
 local builtin = require "telescope.builtin"
@@ -10,20 +10,63 @@ local conf = require("telescope.config").values
 
 local E = {}
 
-local delta = previewers.new_termopen_previewer {
-  get_command = function(entry)
-    -- this is for status
-    -- You can get the AM things in entry.status. So we are displaying file if entry.status == '??' or 'A '
-    -- just do an if and return a different command
-    if entry.status == "??" or "A " then
-      return { "git", "-c", "core.pager=delta", "-c", "delta.side-by-side=false", "diff", entry.value }
-    end
+local diff_ns = vim.api.nvim_create_namespace "telescope_git_diff"
 
-    -- note we can't use pipes
-    -- this command is for git_commits and git_bcommits
-    return { "git", "-c", "core.pager=delta", "-c", "delta.side-by-side=false", "diff", entry.value .. "^!" }
-  end,
-}
+-- color whole lines with the same hl groups as diffview
+local highlight_diff = function(bufnr, lines)
+  for i, line in ipairs(lines) do
+    local hl
+    if line:match "^%+" and not line:match "^%+%+%+" then
+      hl = "DiffAdd"
+    elseif line:match "^%-" and not line:match "^%-%-%-" then
+      hl = "DiffDelete"
+    elseif line:match "^@@" then
+      hl = "DiffText"
+    end
+    if hl then
+      vim.api.nvim_buf_set_extmark(bufnr, diff_ns, i - 1, 0, { line_hl_group = hl })
+    end
+  end
+end
+
+-- buffer previewer showing the output of get_command(entry) as a colored diff
+local diff_previewer = function(get_command)
+  return previewers.new_buffer_previewer {
+    title = "Diff",
+    define_preview = function(self, entry)
+      local bufnr = self.state.bufnr
+      vim.system(get_command(entry), { text = true }, function(res)
+        vim.schedule(function()
+          if not vim.api.nvim_buf_is_valid(bufnr) then
+            return
+          end
+          local lines = vim.split(res.stdout or "", "\n", { trimempty = true })
+          if #lines == 0 then
+            lines = { "No changes" }
+          end
+          vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+          vim.bo[bufnr].filetype = "diff"
+          highlight_diff(bufnr, lines)
+        end)
+      end)
+    end,
+  }
+end
+
+local commit_previewer = diff_previewer(function(entry)
+  return { "git", "show", "--stat", "--patch", entry.value }
+end)
+
+local status_previewer = diff_previewer(function(entry)
+  if entry.status == "??" then
+    return { "git", "diff", "--no-index", "/dev/null", entry.value }
+  end
+  return { "git", "diff", "HEAD", "--", entry.value }
+end)
+
+local branch_previewer = diff_previewer(function(entry)
+  return { "git", "diff", "HEAD..." .. entry.value }
+end)
 
 -- <CR> opens the selected commit in diffview
 local diffview_commit = function(prompt_bufnr, _)
@@ -37,7 +80,7 @@ end
 
 E.my_git_commits = function(opts)
   opts = opts or {}
-  opts.previewer = delta
+  opts.previewer = commit_previewer
   opts.attach_mappings = diffview_commit
 
   builtin.git_commits(opts)
@@ -45,7 +88,7 @@ end
 
 E.my_git_bcommits = function(opts)
   opts = opts or {}
-  opts.previewer = delta
+  opts.previewer = commit_previewer
   opts.attach_mappings = diffview_commit
 
   builtin.git_bcommits(opts)
@@ -53,14 +96,14 @@ end
 
 E.my_git_status = function(opts)
   opts = opts or {}
-  opts.previewer = delta
+  opts.previewer = status_previewer
 
   builtin.git_status(opts)
 end
 
 E.my_git_branches = function(opts)
   opts = opts or {}
-  opts.previewer = delta
+  opts.previewer = branch_previewer
 
   builtin.git_branches(opts)
 end
