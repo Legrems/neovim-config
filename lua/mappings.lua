@@ -230,7 +230,7 @@ end, { desc = "[W]orkspace [L]ist folders" })
 -- ===================================================================
 
 -- Fugitive
-map("n", "<C-c>", "<cmd> vertical topleft Git <bar> vertical resize 50<CR>", { desc = "Git status" })
+map("n", "<C-c>", "<cmd> vertical topleft Git <bar> vertical resize 70<CR>", { desc = "Git status" })
 
 -- Diffview
 map("n", "<C-d>", "<cmd> DiffviewOpen -- %<CR>", { desc = "Diff current file" })
@@ -436,6 +436,7 @@ vim.api.nvim_create_user_command("FormatDisable", function(args)
     -- FormatDisable! will disable formatting just for this buffer
     vim.b.disable_autoformat = true
   else
+    vim.b.disable_autoformat = true
     vim.g.disable_autoformat = true
   end
 end, {

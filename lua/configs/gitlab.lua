@@ -1,7 +1,7 @@
 local M = {
   port = nil, -- The port of the Go server, which runs in the background, if omitted or `nil` the port will be chosen automatically
   log_path = vim.fn.stdpath "cache" .. "/gitlab.nvim.log", -- Log path for the Go server
-  config_path = nil, -- Custom path for `.gitlab.nvim` file, please read the "Connecting to Gitlab" section
+  config_path = "~/.gitlab.nvim", -- Custom path for `.gitlab.nvim` file, please read the "" section
   debug = {
     go_request = false,
     go_response = false,

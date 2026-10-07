@@ -98,7 +98,12 @@ return {
       return require "configs.gitlab"
     end,
     config = function(_, opts)
-      require("gitlab").setup(opts)
+      require("gitlab").setup {
+        auth_provider = function()
+          -- return "my_token", "https://custom.gitlab.instance.url", nil
+          return "glpat-kYze7Guruu9lFz2Q2njrZ286MQp1OjFnCA.01.0y0so1ei4", "https://git.arcanite.ch", nil
+        end,
+      }
     end,
   },
   {
@@ -154,24 +159,29 @@ return {
           lua = { "stylua" },
           -- You can use a function here to determine the formatters dynamically
           python = function(bufnr)
-            if conform.get_formatter_info("black", bufnr).available then
-              return { "isort", "black" }
-            else
-              return { "ruff_format" }
-            end
+            -- if conform.get_formatter_info("black", bufnr).available then
+            --   return { "isort", "black" }
+            -- else
+            --   return { "ruff_format" }
+            -- end
+            return { "ruff_format" }
           end,
           -- javascript = { "prettierd", "prettier", stop_after_first = true },
-          vue = { "prettierd" },
+          -- vue = { "prettierd" },
+          -- vue = { "pnpm format" },
         },
         options = {
           lang_to_formatters = {
             json = { "jq" },
           },
         },
-        format_on_save = {
-          timeout_ms = 1000,
-          lsp_format = "fallback",
-        },
+        format_on_save = function(bufnr)
+          print(bufnr)
+          if vim.g.disable_autoformat then
+            return
+          end
+          return { timeout_ms = 1000, lsp_format = "fallback" }
+        end,
       }
     end,
   },
@@ -207,6 +217,7 @@ return {
 
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
+    branch = "main",
     lazy = false,
     config = function()
       require("nvim-treesitter.configs").setup(require "configs.treesitter_textobjects")
@@ -520,4 +531,17 @@ return {
   --   end,
   -- },
   { "wakatime/vim-wakatime", lazy = false },
+
+  {
+    "Owen-Dechow/videre.nvim",
+    cmd = "Videre",
+    dependencies = {
+      "Owen-Dechow/graph_view_yaml_parser", -- Optional: add YAML support
+      "Owen-Dechow/graph_view_toml_parser", -- Optional: add TOML support
+      "a-usr/xml2lua.nvim", -- Optional | Experimental: add XML support
+    },
+    opts = {
+      box_style = "sharp",
+    },
+  },
 }

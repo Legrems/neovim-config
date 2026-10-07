@@ -27,7 +27,9 @@ local servers = {
   -- "tailwindcss",
 }
 
-if vim.fn.executable "pyright" == 1 then
+if vim.fn.executable "basedpyright" == 1 then
+  table.insert(servers, "basedpyright")
+elseif vim.fn.executable "pyright" == 1 then
   table.insert(servers, "pyright")
 elseif vim.fn.executable "ruff" == 1 then
   table.insert(servers, "ruff")
