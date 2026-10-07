@@ -7,6 +7,8 @@ local finders = require "telescope.finders"
 local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 local conf = require("telescope.config").values
+local entry_display = require "telescope.pickers.entry_display"
+local make_entry = require "telescope.make_entry"
 
 local E = {}
 
@@ -78,10 +80,61 @@ local diffview_commit = function(prompt_bufnr, _)
   return true
 end
 
+-- like `git lg`: <hash> <author initials> <date> <subject>
+local commit_log_args = { "log", "--pretty=format:%h%x09%an%x09%ad%x09%s", "--date=format:%Y-%m-%d %H:%M" }
+
+local initials = function(name)
+  local out = ""
+  for word in name:gmatch "[^%s%-]+" do
+    out = out .. vim.fn.toupper(vim.fn.strcharpart(word, 0, 1))
+  end
+  return out
+end
+
+local commit_displayer = entry_display.create {
+  separator = " ",
+  items = {
+    { width = 8 },
+    { width = 3 },
+    { width = 16 },
+    { remaining = true },
+  },
+}
+
+local commit_entry_maker = function(opts)
+  return function(line)
+    local sha, author, date, msg = line:match "^([^\t]*)\t([^\t]*)\t([^\t]*)\t(.*)$"
+    if not sha then
+      return nil
+    end
+    local short = initials(author)
+    return make_entry.set_default_entry_mt({
+      value = sha,
+      ordinal = table.concat({ sha, short, author, date, msg }, " "),
+      msg = msg,
+      current_file = opts.current_file,
+      display = function()
+        return commit_displayer {
+          { sha, "TelescopeResultsIdentifier" },
+          { short, "TelescopeResultsConstant" },
+          { date, "TelescopeResultsComment" },
+          msg,
+        }
+      end,
+    }, opts)
+  end
+end
+
+-- smaller preview so the log line fits on the results side
+local commit_layout = { horizontal = { preview_width = 0.45 } }
+
 E.my_git_commits = function(opts)
   opts = opts or {}
   opts.previewer = commit_previewer
   opts.attach_mappings = diffview_commit
+  opts.entry_maker = commit_entry_maker(opts)
+  opts.git_command = vim.list_extend({ "git" }, vim.list_extend(vim.deepcopy(commit_log_args), { "--", "." }))
+  opts.layout_config = opts.layout_config or commit_layout
 
   builtin.git_commits(opts)
 end
@@ -90,6 +143,9 @@ E.my_git_bcommits = function(opts)
   opts = opts or {}
   opts.previewer = commit_previewer
   opts.attach_mappings = diffview_commit
+  opts.entry_maker = commit_entry_maker(opts)
+  opts.git_command = vim.list_extend({ "git" }, vim.list_extend(vim.deepcopy(commit_log_args), { "--follow" }))
+  opts.layout_config = opts.layout_config or commit_layout
 
   builtin.git_bcommits(opts)
 end
