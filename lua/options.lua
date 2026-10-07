@@ -90,3 +90,28 @@ autocmd("FileType", {
     end
   end,
 })
+
+-- fugitive: <CR> on a commit opens it in diffview, fallback to fugitive's <CR> otherwise
+autocmd("FileType", {
+  pattern = { "fugitive", "git" },
+  callback = function(ev)
+    -- scheduled so fugitive has set its own buffer mappings first
+    vim.schedule(function()
+      if not vim.api.nvim_buf_is_valid(ev.buf) then
+        return
+      end
+      local orig = vim.fn.maparg("<CR>", "n", false, true)
+      if orig.desc == "Diffview commit" then
+        return
+      end
+      vim.keymap.set("n", "<CR>", function()
+        local line = vim.api.nvim_get_current_line()
+        local hash = line:match "^commit (%x+)" or line:match "^(%x%x%x%x%x%x%x+)%s"
+        if hash then
+          return "<cmd>DiffviewOpen " .. hash .. "^!<CR>"
+        end
+        return orig.rhs or "<CR>"
+      end, { buffer = ev.buf, expr = true, silent = true, desc = "Diffview commit" })
+    end)
+  end,
+})
