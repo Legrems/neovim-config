@@ -25,9 +25,20 @@ local delta = previewers.new_termopen_previewer {
   end,
 }
 
+-- <CR> opens the selected commit in diffview
+local diffview_commit = function(prompt_bufnr, _)
+  actions.select_default:replace(function()
+    local selection = action_state.get_selected_entry()
+    actions.close(prompt_bufnr)
+    vim.cmd("DiffviewOpen " .. selection.value .. "^!")
+  end)
+  return true
+end
+
 E.my_git_commits = function(opts)
   opts = opts or {}
   opts.previewer = delta
+  opts.attach_mappings = diffview_commit
 
   builtin.git_commits(opts)
 end
@@ -35,6 +46,7 @@ end
 E.my_git_bcommits = function(opts)
   opts = opts or {}
   opts.previewer = delta
+  opts.attach_mappings = diffview_commit
 
   builtin.git_bcommits(opts)
 end
